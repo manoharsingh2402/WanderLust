@@ -1,0 +1,177 @@
+body{
+    font-family: "Plus Jakarta Sans", sans-serif !important; 
+    display: flex;
+    flex-direction: column; 
+    min-height: 100vh;
+}  
+
+.container{
+    flex: 1; 
+}
+
+.navbar{
+    height: 5 rem;
+    background-color: white;
+} 
+
+.fa-compass{
+    color: #fe424d; 
+    font-size: 2rem; 
+}
+.nav-link{
+    color: #222222 !important; 
+}
+
+/* Cards */ 
+.listing-card{
+    border: none !important; 
+    margin-bottom: 2 rem;
+}
+
+.card-img-top{
+    border-radius: 1rem !important; 
+    width: 100% !important; 
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding: 0 !important;
+}
+
+.card-body p{
+    font-weight: 400 !important;
+} 
+
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.2; 
+    background-color: white;
+}
+.listing-link{
+    text-decoration: none;
+}
+
+/* Footer */ 
+.f-info-links a{
+    text-decoration: none; 
+    color: #222222;
+}
+
+.f-info-links a:hover{
+    text-decoration: underline; 
+}
+
+.f-info{
+    display: flex; 
+    height: 8rem; 
+    background-color: #ebebeb; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    align-items: space-evenly; 
+    text-align: center;
+} 
+
+.f-info-socials,.f-info-links,.f-info-brand{
+    width: 100%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.f-info-socials i{
+    font-size: 1.25rem; 
+    margin-right: 1rem;
+} 
+
+/* New Page */
+.add-btn{
+    background-color: #fe424d !important; 
+    border: none !important;
+}
+
+/* Edit Page */ 
+.edit-btn{
+    background-color: #fe424d !important; 
+    border: none !important;
+} 
+
+/* Show Page */
+.show-img{
+    height: 30vh !important;
+}
+
+.btns{
+    display: flex; 
+    /* justify-content: space-evenly; */
+}
+
+.show-card{
+    padding-left: 0; 
+    padding-right: 0;
+}
+
+#map{
+    width: 550px; 
+    height: 60vh;
+}
+
+#filters{
+    display: flex; 
+    flex-wrap: wrap; 
+    align-items: center;
+}
+#filters a{
+    text-decoration: none; 
+    color: rgba(0, 0, 0, 0.815); 
+} 
+
+.filter{
+    text-align: center; 
+    margin-right: 1.7rem; 
+    margin-top: 2rem;
+    opacity: 0.7;
+}
+.filter:hover{
+    opacity: 1;
+    cursor: pointer;
+} 
+.filter p{
+    font-size: 0.8rem; 
+}
+
+.tax-info{
+    display: none; 
+}
+.tax-toggle{
+    border: 1px solid black; 
+    border-radius: 1rem; 
+    height: 3.25rem; 
+    padding: 1rem; 
+    margin-left: 4rem; 
+    display: flex; 
+    align-items: center; 
+} 
+
+.search-btn{
+    background-color: #fe424d !important; 
+    color: white !important;  
+    border-radius: 1.25rem !important; 
+    padding: 0 1rem 0 1rem !important;
+}
+.search-btn:hover{
+    background-color: #fe424d !important; 
+    color: white !important; 
+}
+
+.search-btn i{
+    display: inline; 
+    margin-right: 0.5rem;
+}
+
+.search-inp{
+    border-radius: 1.25rem !important;
+    padding: 0.25rem 3rem 0.25rem 3rem !important; 
+    font-size: 1rem !important; 
+}
