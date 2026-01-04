@@ -15,7 +15,6 @@ const ExpressError = require('./utils/ExpressError.js');
 // const Review=require("./models/review.js");    
 const ATLAS_URL=process.env.ATLASDB_URL; 
 
-
 const session=require('express-session');  
 const MongoStore=require('connect-mongo').default; 
 const cookieParser=require('cookie-parser'); 
@@ -95,31 +94,9 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate); 
 app.use(express.static(path.join(__dirname,"/public"))); 
 
-// app.get("/demouser",async(req,res)=>{
-//     let fakeUser=new User({
-//         email: "abc@gmail.com",
-//         username: "sigma-stud",
-//     }); 
-//     let newUser=await User.register(fakeUser,"helloWorld"); 
-//     res.send(newUser); 
-// }); 
-
 app.use("/listings",listingRouter); 
 app.use("/listings/:id/reviews",reviewRouter); 
 app.use("/",userRouter); 
-
-// app.get('/testListing',async(req,res)=>{
-//     let sampleListing= new Listing({
-//         title: "My new Villa",
-//         description: "By the beach",
-//         price: 2500,
-//         location: "Calangute, Goa",
-//         country: "India"
-//     }); 
-//     await sampleListing.save(); 
-//     console.log("Sample was saved"); 
-//     res.send("Testing Succesful"); 
-// });
 
 
 // page not found
