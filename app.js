@@ -121,6 +121,9 @@ app.use("/",userRouter);
 //     res.send("Testing Succesful"); 
 // });
 
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+}); 
 
 // page not found
 

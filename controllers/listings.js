@@ -46,8 +46,8 @@ module.exports.createListing = async (req, res) => {
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = {
-        url: req.file.secure_url,
-        filename: req.file.public_id
+        url: req.file.path,
+        filename: req.file.filename,
     };
 
     // ✅ Correct GeoJSON
