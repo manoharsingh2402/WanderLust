@@ -121,7 +121,7 @@ app.use("/",userRouter);
 //     res.send("Testing Succesful"); 
 // });
 
-app.get("/", (req, res) => {
+app.get("wanderlust-2-d0nv.onrender.com", (req, res) => {
   res.redirect("/listings");
 }); 
 
