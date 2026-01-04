@@ -76,9 +76,9 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser()); 
 
 // root route
-// app.get('/',(req,res)=>{
-//     res.send("Root is working.")
-// }); 
+app.get('/',(req,res)=>{
+    return res.redirect("/listings");
+}); 
 
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");  
@@ -121,9 +121,6 @@ app.use("/",userRouter);
 //     res.send("Testing Succesful"); 
 // });
 
-app.get("wanderlust-2-d0nv.onrender.com", (req, res) => {
-  res.redirect("/listings");
-}); 
 
 // page not found
 
