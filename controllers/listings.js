@@ -51,7 +51,8 @@ module.exports.createListing = async (req, res) => {
     };
 
     // ✅ Correct GeoJSON
-    newListing.geometry = geometry;
+    newListing.geometry = geometry; 
+    newListing.city=newListing.city.trim().toLowerCase(); 
 
     await newListing.save();
 
@@ -124,11 +125,12 @@ module.exports.renderCategory=async(req,res)=>{
 // Search By city_name
 
 module.exports.renderCityListings=async(req,res)=>{
-    const {city:City}=req.body; 
+    const {city:Citi}=req.body;  
+    const City=Citi.trim().toLowerCase(); 
     const datas=await Listing.find({city:City});  
     if(datas.length===0){
         req.flash("error","No listings found under this category"); 
         return res.redirect("/listings"); 
-    }
+    } 
     return res.render("./listings/index.ejs",{datas});
 }
