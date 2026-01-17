@@ -50,7 +50,10 @@ let listingSchema = new Schema({
         enum: ["trending","beach","mountain","city","castle","pool","camp","farm","arctic","room"],
     }, 
     city :{
-        type: String,
+        type: String, 
+        required: true,
+        trim: true,
+        lowercase: true,
     }
 }); 
 

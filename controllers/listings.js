@@ -52,7 +52,6 @@ module.exports.createListing = async (req, res) => {
 
     // ✅ Correct GeoJSON
     newListing.geometry = geometry; 
-    newListing.city=newListing.city.trim().toLowerCase(); 
 
     await newListing.save();
 
