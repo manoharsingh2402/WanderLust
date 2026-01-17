@@ -120,3 +120,15 @@ module.exports.renderCategory=async(req,res)=>{
     }
     return res.render("./listings/index.ejs",{datas});
 }
+
+// Search By city_name
+
+module.exports.renderCityListings=async(req,res)=>{
+    const {city:City}=req.body; 
+    const datas=await Listing.find({city:City});  
+    if(datas.length===0){
+        req.flash("error","No listings found under this category"); 
+        return res.redirect("/listings"); 
+    }
+    return res.render("./listings/index.ejs",{datas});
+}

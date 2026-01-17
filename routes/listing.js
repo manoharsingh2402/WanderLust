@@ -43,5 +43,7 @@ router.route("/:id")
 router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(listingController.renderEditForm));  
 
 
+// Search By City (route)
+router.post("/search/city",wrapAsync(listingController.renderCityListings)); 
 
 module.exports=router; 

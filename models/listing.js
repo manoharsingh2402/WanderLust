@@ -48,7 +48,10 @@ let listingSchema = new Schema({
     category: {
         type: String,
         enum: ["trending","beach","mountain","city","castle","pool","camp","farm","arctic","room"],
-    },
+    }, 
+    city :{
+        type: String,
+    }
 }); 
 
 // all reviews of deleting listing gets deleted 

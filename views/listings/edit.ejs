@@ -33,7 +33,14 @@
                         <div class="invalid-feedback">Price should be valid</div>
                     </div>
 
-                    <div class="mb-3 col-md-8">
+                    <div class="mb-3 col-md-4">
+                        <label for="city" class="form-label">City</label>
+                        <input name="listing[city]" placeholder="City" class="form-control" id="price" required > 
+                        
+                        <div class="invalid-feedback">city name should be valid</div>
+                    </div>
+                    
+                    <div class="mb-3 col-md-4">
                         <label for="country" class="form-label">Country</label>
                         <input type="text" name="listing[country]" placeholder="Enter Country" class="form-control" id="country" value="<%=listing.country%>" required> 
                         <div class="invalid-feedback">country name should be valid</div>
