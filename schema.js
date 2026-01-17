@@ -9,7 +9,7 @@ const listingSchema=joi.object({
         price:joi.number().required().min(0),
         // image: joi.string().allow("",null),  
         category: joi.string().required(), 
-        city: joi.string.required(),
+        city: joi.string().required(),
     }).required(),
 }); 
 
