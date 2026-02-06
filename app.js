@@ -26,6 +26,7 @@ const User=require("./models/user.js");
 const listingRouter=require("./routes/listing.js"); 
 const reviewRouter=require("./routes/review.js"); 
 const userRouter=require("./routes/user.js"); 
+const bookingRouter=require("./routes/booking.js"); 
 
 main() 
 .then(()=>{
@@ -96,6 +97,7 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 app.use("/listings",listingRouter); 
 app.use("/listings/:id/reviews",reviewRouter); 
+app.use("/listings", bookingRouter); 
 app.use("/",userRouter); 
 
 
@@ -112,6 +114,7 @@ app.use((err,req,res,next)=>{
     res.status(status).render("listings/error.ejs",{message}); 
 }); 
 
-app.listen(8080,()=>{
-    console.log("Server is listening on port 8080"); 
+const PORT = 8080;
+app.listen(PORT,()=>{
+    console.log(`Server is listening on port ${PORT}`); 
 }); 

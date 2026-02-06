@@ -1,0 +1,135 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Booking Details</h2>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Listing Information -->
+                    <div class="mb-4 pb-4 border-bottom">
+                        <h4><%= booking.listing.title %></h4>
+                        <p class="text-muted mb-2"><%= booking.listing.location %>, <%= booking.listing.country %></p>
+                        <p class="mb-0"><strong>Price per night:</strong> ₹<%= booking.listing.price %></p>
+                    </div>
+
+                    <!-- Booking Information -->
+                    <div class="mb-4 pb-4 border-bottom">
+                        <h5>Booking Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small">Check-In Date</p>
+                                <p class="h6"><%= new Date(booking.checkInDate).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small">Check-Out Date</p>
+                                <p class="h6"><%= new Date(booking.checkOutDate).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small">Number of Nights</p>
+                                <p class="h6"><%= booking.numberOfNights %> night<%= booking.numberOfNights > 1 ? 's' : '' %></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small">Number of Guests</p>
+                                <p class="h6"><%= booking.numberOfGuests %> guest<%= booking.numberOfGuests > 1 ? 's' : '' %></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Information -->
+                    <div class="mb-4 pb-4 border-bottom">
+                        <h5>Payment Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small">Total Price</p>
+                                <p class="h5 text-success">₹<%= booking.totalPrice.toFixed(2) %></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small">Payment Status</p>
+                                <p class="h6">
+                                    <% if (booking.paymentStatus === 'completed') { %>
+                                        <span class="badge bg-success">✓ Payment Completed</span>
+                                    <% } else if (booking.paymentStatus === 'pending') { %>
+                                        <span class="badge bg-warning">⏳ Payment Pending</span>
+                                    <% } else if (booking.paymentStatus === 'failed') { %>
+                                        <span class="badge bg-danger">✗ Payment Failed</span>
+                                    <% } else if (booking.paymentStatus === 'cancelled') { %>
+                                        <span class="badge bg-secondary">✗ Booking Cancelled</span>
+                                    <% } %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <% if (booking.razorpayPaymentId) { %>
+                            <div class="row mt-3">
+                                <div class="col-md-6 mb-3">
+                                    <p class="text-muted small">Order ID</p>
+                                    <p class="h6 font-monospace"><%= booking.razorpayOrderId %></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="text-muted small">Payment ID</p>
+                                    <p class="h6 font-monospace"><%= booking.razorpayPaymentId %></p>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Booking Timeline -->
+                    <div class="mb-4">
+                        <h5>Booking Timeline</h5>
+                        <p class="text-muted small">Booked on: <%= new Date(booking.createdAt).toLocaleDateString('en-IN', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+                        <p class="text-muted small">Last updated: <%= new Date(booking.updatedAt).toLocaleDateString('en-IN', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-2">
+                        <a href="/mybookings" class="btn btn-secondary">Back to My Bookings</a>
+                        
+                        <% if (booking.paymentStatus === 'completed') { %>
+                            <form method="POST" action="/listings/booking/<%= booking._id %>/cancel?_method=DELETE" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                    Cancel Booking
+                                </button>
+                            </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        border: none;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .font-monospace {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        word-break: break-all;
+    }
+
+    .badge {
+        font-size: 0.95rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+    }
+
+    .border-bottom {
+        border-bottom: 1px solid #e9ecef !important;
+    }
+</style>

@@ -1,0 +1,221 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Book Your Stay</h2>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Listing Details -->
+                    <div class="mb-4 pb-4 border-bottom">
+                        <h5><%= listing.title %></h5>
+                        <p class="text-muted"><%= listing.location %>, <%= listing.country %></p>
+                        <p class="h6">₹<strong><%= listing.price %></strong> per night</p>
+                    </div>
+
+                    <!-- Booking Form -->
+                    <form id="bookingForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="checkInDate" class="form-label">Check-In Date</label>
+                                <input 
+                                    type="date" 
+                                    class="form-control" 
+                                    id="checkInDate" 
+                                    name="checkInDate" 
+                                    required
+                                    min="<%= new Date().toISOString().split('T')[0] %>"
+                                >
+                            </div>
+                            <div class="col-md-6">
+                                <label for="checkOutDate" class="form-label">Check-Out Date</label>
+                                <input 
+                                    type="date" 
+                                    class="form-control" 
+                                    id="checkOutDate" 
+                                    name="checkOutDate" 
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="numberOfGuests" class="form-label">Number of Guests</label>
+                                <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    id="numberOfGuests" 
+                                    name="numberOfGuests" 
+                                    value="1" 
+                                    min="1"
+                                    max="10"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <p class="mb-1"><strong>Booking Summary:</strong></p>
+                            <p class="mb-1">Check-In: <span id="summaryCheckIn">-</span></p>
+                            <p class="mb-1">Check-Out: <span id="summaryCheckOut">-</span></p>
+                            <p class="mb-1">Number of Nights: <span id="numberOfNights">0</span></p>
+                            <p class="mb-0"><strong>Total Price: ₹<span id="totalPrice">0</span></strong></p>
+                        </div>
+
+                        <button type="button" class="btn btn-success btn-lg w-100" id="paymentBtn">
+                            Proceed to Payment
+                        </button>
+                        <a href="/listings/<%= listing._id %>" class="btn btn-secondary btn-lg w-100 mt-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    const listingPrice = <%= listing.price %>;
+    const listingId = "<%= listing._id %>";
+
+    // Update booking summary on date change
+    document.getElementById('checkInDate').addEventListener('change', updateSummary);
+    document.getElementById('checkOutDate').addEventListener('change', updateSummary);
+
+    function updateSummary() {
+        const checkInDate = document.getElementById('checkInDate').value;
+        const checkOutDate = document.getElementById('checkOutDate').value;
+
+        if (checkInDate && checkOutDate) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+            const numberOfNights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+
+            if (numberOfNights > 0) {
+                document.getElementById('summaryCheckIn').textContent = checkInDate;
+                document.getElementById('summaryCheckOut').textContent = checkOutDate;
+                document.getElementById('numberOfNights').textContent = numberOfNights;
+                document.getElementById('totalPrice').textContent = (listingPrice * numberOfNights).toFixed(2);
+            } else {
+                document.getElementById('numberOfNights').textContent = '0';
+                document.getElementById('totalPrice').textContent = '0';
+            }
+        }
+    }
+
+    // Payment button handler
+    document.getElementById('paymentBtn').addEventListener('click', async function() {
+        const checkInDate = document.getElementById('checkInDate').value;
+        const checkOutDate = document.getElementById('checkOutDate').value;
+        const numberOfGuests = document.getElementById('numberOfGuests').value;
+
+        if (!checkInDate || !checkOutDate) {
+            alert('Please select check-in and check-out dates');
+            return;
+        }
+
+        const checkIn = new Date(checkInDate);
+        const checkOut = new Date(checkOutDate);
+        const numberOfNights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+
+        if (numberOfNights <= 0) {
+            alert('Check-out date must be after check-in date');
+            return;
+        }
+
+        try {
+            // Create order
+            const orderResponse = await fetch(`/listings/${listingId}/create-order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    checkInDate,
+                    checkOutDate,
+                    numberOfGuests,
+                }),
+            });
+
+            const orderData = await orderResponse.json();
+
+            if (!orderData.success) {
+                alert('Error creating order: ' + orderData.message);
+                return;
+            }
+
+            // Open Razorpay checkout
+            const options = {
+                key: orderData.keyId,
+                amount: orderData.order.amount,
+                currency: orderData.order.currency,
+                order_id: orderData.order.id,
+                handler: async function(response) {
+                    // Verify payment
+                    const verifyResponse = await fetch(`/listings/${listingId}/verify-payment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            booking_id: orderData.booking.id,
+                        }),
+                    });
+
+                    const verifyData = await verifyResponse.json();
+
+                    if (verifyData.success) {
+                        alert('Payment successful! Booking confirmed.');
+                        window.location.href = `/mybookings`;
+                    } else {
+                        alert('Payment verification failed: ' + verifyData.message);
+                    }
+                },
+                prefill: {
+                    name: "<%= currUser.username %>",
+                    email: "<%= currUser.email || '' %>",
+                },
+                theme: {
+                    color: '#007bff',
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment cancelled');
+                    },
+                },
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+</script>
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    .alert {
+        border-radius: 8px;
+    }
+</style>

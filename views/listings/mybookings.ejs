@@ -1,0 +1,121 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <h2 class="mb-4">My Bookings</h2>
+
+            <% if (bookings.length === 0) { %>
+                <div class="alert alert-info" role="alert">
+                    <h5>No bookings yet</h5>
+                    <p>You haven't made any bookings. <a href="/listings">Start exploring listings</a> to make your first booking!</p>
+                </div>
+            <% } else { %>
+                <div class="row">
+                    <% bookings.forEach(booking => { %>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <% if (booking.listing && booking.listing.image && booking.listing.image.url) { %>
+                                    <img 
+                                        src="<%= booking.listing.image.url %>" 
+                                        class="card-img-top" 
+                                        alt="<%= booking.listing.title %>"
+                                        style="height: 200px; object-fit: cover;"
+                                    >
+                                <% } %>
+                                
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= booking.listing.title %></h5>
+                                    <p class="card-text text-muted"><%= booking.listing.location %>, <%= booking.listing.country %></p>
+
+                                    <div class="mb-3">
+                                        <p class="mb-1">
+                                            <strong>Check-In:</strong> 
+                                            <%= new Date(booking.checkInDate).toLocaleDateString('en-IN') %>
+                                        </p>
+                                        <p class="mb-1">
+                                            <strong>Check-Out:</strong> 
+                                            <%= new Date(booking.checkOutDate).toLocaleDateString('en-IN') %>
+                                        </p>
+                                        <p class="mb-1">
+                                            <strong>Nights:</strong> <%= booking.numberOfNights %>
+                                        </p>
+                                        <p class="mb-1">
+                                            <strong>Guests:</strong> <%= booking.numberOfGuests %>
+                                        </p>
+                                        <p class="mb-0">
+                                            <strong>Total Price:</strong> ₹<%= booking.totalPrice.toFixed(2) %>
+                                        </p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <% if (booking.paymentStatus === 'completed') { %>
+                                            <span class="badge bg-success">Payment Completed</span>
+                                        <% } else if (booking.paymentStatus === 'pending') { %>
+                                            <span class="badge bg-warning">Payment Pending</span>
+                                        <% } else if (booking.paymentStatus === 'failed') { %>
+                                            <span class="badge bg-danger">Payment Failed</span>
+                                        <% } else if (booking.paymentStatus === 'cancelled') { %>
+                                            <span class="badge bg-secondary">Booking Cancelled</span>
+                                        <% } %>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <a 
+                                            href="/listings/booking/<%= booking._id %>" 
+                                            class="btn btn-sm btn-info"
+                                        >
+                                            View Details
+                                        </a>
+                                        <% if (booking.paymentStatus === 'completed') { %>
+                                            <form method="POST" action="/listings/booking/<%= booking._id %>/cancel?_method=DELETE" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                                    Cancel Booking
+                                                </button>
+                                            </form>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer text-muted small">
+                                    Booked on: <%= new Date(booking.createdAt).toLocaleDateString('en-IN') %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+
+            <div class="mt-4">
+                <a href="/listings" class="btn btn-primary">Back to Listings</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .card-img-top {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+</style>
