@@ -4,6 +4,9 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const { isLoggedIn } = require("../middleware.js");
 const bookingController = require("../controllers/bookings.js");
 
+// Get all bookings for logged-in user
+router.get("/mybookings", isLoggedIn, wrapAsync(bookingController.getUserBookings));
+
 // Render booking form
 router.get("/:id/booking", isLoggedIn, wrapAsync(bookingController.renderBookingForm));
 
@@ -12,9 +15,6 @@ router.post("/:id/create-order", isLoggedIn, wrapAsync(bookingController.createO
 
 // Verify payment
 router.post("/:id/verify-payment", isLoggedIn, wrapAsync(bookingController.verifyPayment));
-
-// Get all bookings for logged-in user
-router.get("/mybookings", isLoggedIn, wrapAsync(bookingController.getUserBookings));
 
 // Get specific booking details
 router.get("/booking/:id", isLoggedIn, wrapAsync(bookingController.getBookingDetails));

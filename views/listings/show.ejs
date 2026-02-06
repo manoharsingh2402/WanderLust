@@ -25,13 +25,12 @@
             <form action="/listings/<%=listing.id%>?_method=DELETE" method="post">
                 <button type="submit" class="btn btn-dark offset-5">Delete</button>
             </form>
-        <%}%> 
-        <% if (currUser) { %>
-            <a href="/listings/<%= listing._id %>/booking" class="btn btn-success btn-lg">
+        <%}else if (currUser) { %>
+            <a href="/listings/bookings/<%= listing._id %>/booking" class="btn btn-success btn-lg offset-4">
                 Book Now
             </a>
         <% } else { %>
-            <p>Please <a href="/register">sign up</a> to make a booking</p>
+            <p class="offset-3">Please <a href="/signup">sign up</a> to make a booking</p>
         <% } %>
     </div>
     <div class="col-8 offset-3 mb-3">

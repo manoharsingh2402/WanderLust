@@ -97,7 +97,7 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 app.use("/listings",listingRouter); 
 app.use("/listings/:id/reviews",reviewRouter); 
-app.use("/listings", bookingRouter); 
+app.use("/listings/bookings/", bookingRouter); 
 app.use("/",userRouter); 
 
 

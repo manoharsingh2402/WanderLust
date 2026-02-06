@@ -62,13 +62,13 @@
 
                                     <div class="d-flex gap-2">
                                         <a 
-                                            href="/listings/booking/<%= booking._id %>" 
+                                            href="/listings/bookings/booking/<%= booking._id %>" 
                                             class="btn btn-sm btn-info"
                                         >
                                             View Details
                                         </a>
                                         <% if (booking.paymentStatus === 'completed') { %>
-                                            <form method="POST" action="/listings/booking/<%= booking._id %>/cancel?_method=DELETE" style="display: inline;">
+                                            <form method="POST" action="/listings/bookings/booking/<%= booking._id %>/cancel?_method=DELETE" style="display: inline;">
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
                                                     Cancel Booking
                                                 </button>
