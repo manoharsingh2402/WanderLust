@@ -87,7 +87,7 @@
 
                     <!-- Action Buttons -->
                     <div class="d-flex gap-2">
-                        <a href="/mybookings" class="btn btn-secondary">Back to My Bookings</a>
+                        <a href="/listings/bookings/mybookings" class="btn btn-secondary">Back to My Bookings</a>
                         
                         <% if (booking.paymentStatus === 'completed') { %>
                             <form method="POST" action="/listings/bookings/booking/<%= booking._id %>/cancel?_method=DELETE" style="display: inline;">
