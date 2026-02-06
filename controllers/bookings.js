@@ -170,7 +170,7 @@ module.exports.getUserBookings = async (req, res) => {
             .populate("listing")
             .sort({ createdAt: -1 });
         
-        res.render("listings/mybookings.ejs", { bookings });
+        res.render("listings/bookings/mybookings.ejs", { bookings });
     } catch (error) {
         console.log(error);
         req.flash("error", "Something went wrong");
@@ -188,20 +188,20 @@ module.exports.getBookingDetails = async (req, res) => {
         
         if (!booking) {
             req.flash("error", "Booking not found");
-            return res.redirect("/mybookings");
+            return res.redirect("/listings/bookings/mybookings");
         }
         
         // Check if user is the owner of the booking
         if (booking.user._id.toString() !== req.user._id.toString()) {
             req.flash("error", "You don't have permission to view this booking");
-            return res.redirect("/mybookings");
+            return res.redirect("/listings/bookings/mybookings");
         }
         
         res.render("listings/booking-details.ejs", { booking });
     } catch (error) {
         console.log(error);
         req.flash("error", "Something went wrong");
-        res.redirect("/mybookings");
+        res.redirect("/listings/bookings/mybookings");
     }
 };
 
@@ -213,17 +213,17 @@ module.exports.cancelBooking = async (req, res) => {
         
         if (!booking) {
             req.flash("error", "Booking not found");
-            return res.redirect("/mybookings");
+            return res.redirect("/listings/bookings/mybookings");
         }
         
         if (booking.user.toString() !== req.user._id.toString()) {
             req.flash("error", "You don't have permission to cancel this booking");
-            return res.redirect("/mybookings");
+            return res.redirect("/listings/bookings/mybookings");
         }
         
         if (booking.paymentStatus === "cancelled") {
             req.flash("error", "This booking is already cancelled");
-            return res.redirect("/mybookings");
+            return res.redirect("/listings/bookings/mybookings");
         }
         
         booking.paymentStatus = "cancelled";
@@ -231,10 +231,10 @@ module.exports.cancelBooking = async (req, res) => {
         await booking.save();
         
         req.flash("success", "Booking cancelled successfully");
-        res.redirect("/mybookings");
+        res.redirect("/listings/bookings/mybookings");
     } catch (error) {
         console.log(error);
         req.flash("error", "Something went wrong while cancelling booking");
-        res.redirect("/mybookings");
+        res.redirect("/listings/bookings/mybookings");
     }
 };
