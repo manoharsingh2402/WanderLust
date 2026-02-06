@@ -170,7 +170,7 @@ module.exports.getUserBookings = async (req, res) => {
             .populate("listing")
             .sort({ createdAt: -1 });
         
-        res.render("listings/bookings/mybookings.ejs", { bookings });
+        res.render("listings/mybookings.ejs", { bookings });
     } catch (error) {
         console.log(error);
         req.flash("error", "Something went wrong");
